@@ -5,4 +5,4 @@ It may become a game engine.
 Or not.
 
 ## Building
-'cmake --build ./build'
+Use provided scripts.
