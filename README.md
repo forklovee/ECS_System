@@ -24,10 +24,8 @@ Contiguous component storage for cache efficiency
 Separation of data (components) and behavior (systems)
 
 ## Building
+Use provided scripts.
 ### Requirements:
 C++20 compatible compiler
 CMake 3.15+
 OpenGL 3.3+ compatible GPU
-
-## Building
-Use provided scripts.
