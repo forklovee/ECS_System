@@ -4,6 +4,9 @@ A data-oriented 3D game engine built from scratch in modern C++20, focused on pe
 ## Overview
 Nocturne Engine is a learning project exploring low-level game engine design, featuring a custom Entity Component System and OpenGL rendering pipeline. Built to understand how modern game engines work under the hood.
 
+## Current State
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/0eea7b47-e49e-46fa-9fdf-126185cef8fe" />
+
 ## Current Features
 ### Core Systems:
 Custom Entity Component System (ECS) architecture
