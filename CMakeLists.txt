@@ -9,9 +9,11 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     include
-    include/windowing
-    include/components
+    include/core
     include/entities
+    include/components
+    include/events
+    include/rendering
 )
 
 add_subdirectory(libs/glfw)
@@ -20,19 +22,20 @@ target_include_directories(glad PUBLIC
   libs/glad/include
 )
 
-
 target_include_directories(${PROJECT_NAME} PUBLIC
   libs/glad/include
   libs/glfw/include
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-        src/game.cpp
+        src/core/window.cpp
+
         src/entities/entity_manager.cpp
         src/entities/entity.cpp
 
         src/events/event_manager.cpp
-        src/windowing/window.cpp
+
+        src/rendering/shader.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} glad glfw)

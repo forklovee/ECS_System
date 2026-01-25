@@ -1,10 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <concepts>
 #include <cassert>
-#include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 #include "entities/entity.h"
 #include "components.h"
@@ -40,6 +39,10 @@ namespace NocEngine {
                 const size_t entityId = entity.GetId();
                 const size_t componentId = m_entityToComponent[entityId];
                 return m_components[componentId];
+            }
+
+            std::vector<T>& GetComponents() const {
+                return m_components;
             }
 
             T& InsertComponent(const Entity& entity, T&& component) {

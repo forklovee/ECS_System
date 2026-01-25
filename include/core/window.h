@@ -19,11 +19,19 @@ public:
   Window(Window &&other) = delete;
   Window &operator=(Window &&other) = delete;
 
+  void ClearScreen() const;
+  void Present() const;
+  void PollEvents() const;
+
   bool ShouldClose() const { return glfwWindowShouldClose(m_window); };
   GLFWwindow* GetHandle() const { return m_window; };
 
 private:
   void init();
+
+  static void error_callback(int error, const char *description);
+  static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+  static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 private:
   GLFWwindow *m_window;

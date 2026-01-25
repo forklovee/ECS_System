@@ -1,14 +1,11 @@
 #pragma once
-#include <array>
 #include <vector>
 #include <typeindex>
 #include <memory>
 #include <algorithm>
 #include <bitset>
-#include <type_traits>
 
 #include "component_array.h"
-#include "components.h"
 #include "entity.h"
 
 namespace NocEngine{
@@ -21,10 +18,10 @@ namespace NocEngine{
         }
 
         template<ValidComponent T>
-        size_t GetOrRegisterComponentTypeId();
+        T& GetComponent(const Entity& entity) const;
 
         template<ValidComponent T>
-        T& GetComponent(const Entity& entity) const;
+        std::vector<T>& GetComponents() const;
 
         template<ValidComponent T>
         std::bitset<64> GetComponentBitset() const;
@@ -56,24 +53,16 @@ namespace NocEngine{
             m_registered_types.reserve(64);
         }
 
+        template<ValidComponent T>
+        size_t GetOrRegisterComponentTypeId();
+
+        template<ValidComponent T>
+        ComponentArray<T>* GetComponentArray();
+
     private:
         std::vector<std::unique_ptr<IComponentArray>> m_components{};
         std::vector<std::type_index> m_registered_types{};
     };
-    
-    template<ValidComponent T>
-    size_t ComponentManager::GetOrRegisterComponentTypeId()
-    {
-        const std::type_index index{typeid(T)};
-        auto it = std::find(m_registered_types.begin(), m_registered_types.end(), index);
-        if (it == m_registered_types.end()) // Register Component Type
-        {
-            m_registered_types.push_back(index);
-            m_components.emplace_back(std::make_unique<ComponentArray<T>>()); // Every component needs an array.
-            return m_registered_types.size() - 1;
-        }
-        return std::distance(m_registered_types.begin(), it);
-    }
 
     template<ValidComponent T>
     T& ComponentManager::GetComponent(const Entity& entity) const
@@ -82,6 +71,16 @@ namespace NocEngine{
         IComponentArray* basePtr = m_components.at(componentTypeId).get();
         auto* componentArray = static_cast<ComponentArray<T>*>(basePtr);
         return componentArray->GetComponent(entity);
+    }
+
+    template<ValidComponent T>
+    std::vector<T>& ComponentManager::GetComponents() const
+    {
+        ComponentArray<T>* arrayPtr = GetComponentArray<T>();
+        if (!arrayPtr){
+            return {};
+        }
+        return arrayPtr->GetComponents();
     }
 
     template<ValidComponent T>
@@ -134,4 +133,32 @@ namespace NocEngine{
         auto* componentArray = static_cast<ComponentArray<T>*>(basePtr);
         componentArray->RemoveComponent(entity);
     }
+
+    template<ValidComponent T>
+    size_t ComponentManager::GetOrRegisterComponentTypeId()
+    {
+        const std::type_index index{typeid(T)};
+        auto it = std::find(m_registered_types.begin(), m_registered_types.end(), index);
+        if (it == m_registered_types.end()) // Register Component Type
+        {
+            m_registered_types.push_back(index);
+            m_components.emplace_back(std::make_unique<ComponentArray<T>>()); // Every component needs an array.
+            return m_registered_types.size() - 1;
+        }
+        return std::distance(m_registered_types.begin(), it);
+    }
+
+    template<ValidComponent T>
+    ComponentArray<T>* ComponentManager::GetComponentArray() {
+        const std::type_index index{typeid(T)};
+        auto it = std::find(m_registered_types.begin(), m_registered_types.end(), index);
+        if (it == m_registered_types.end()){
+            std::cerr << "ComponentManager::GetComponentArray: Couldn't find array for specified component.\n";
+            return nullptr;
+        }
+        const size_t arrayIndex(std::distance(m_registered_types.begin(), it));
+        return m_components[arrayIndex].get();
+    }
+
+
 } // NocEngine

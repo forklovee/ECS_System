@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 #include "../math.h"
 
 namespace NocEngine {
@@ -13,6 +11,10 @@ struct CTransform: CComponent {
   Math::Vector3<float> position{};
   Math::Vector3<float> rotation{};
   Math::Vector3<float> scale{};
+};
+
+struct CMeshRenderer: CComponent{
+  size_t mesh_handle_id{};
 };
 
 struct CBoxShape: CComponent {
