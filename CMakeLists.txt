@@ -10,9 +10,8 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE
     include
     include/core
-    include/entities
-    include/components
-    include/events
+    include/ecs
+    include/ecs/components
     include/rendering
 )
 
@@ -28,14 +27,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-        src/core/window.cpp
+  src/core/window.cpp
 
-        src/entities/entity_manager.cpp
-        src/entities/entity.cpp
-
-        src/events/event_manager.cpp
-
-        src/rendering/shader.cpp
+  src/ecs/entity_manager.cpp
+  src/rendering/shader.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} glad glfw)

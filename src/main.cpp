@@ -7,9 +7,9 @@
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 
-#include "components/components.h"
-#include "components/component_manager.h"
-#include "entities/entity_manager.h"
+#include "ecs/components/components.h"
+#include "ecs/component_manager.h"
+#include "ecs/entity_manager.h"
 #include "core/window.h"
 
 using namespace NocEngine;
@@ -22,7 +22,7 @@ int main() {
   
   // Entities and components test creation
   for (size_t i{}; i < 1024; i++) {
-    Entity& e = em.CreateEntity();
+    Entity e = em.CreateEntity();
     cm.CreateComponent<CTransform>(e);
 
     if (i % 3 == 0){
@@ -71,8 +71,6 @@ int main() {
   
 
   while (!window.ShouldClose()) {
-    em.Update();
-
     window.PollEvents();
     window.ClearScreen();
 
@@ -83,11 +81,9 @@ int main() {
     window.Present();
   }
 
-  const std::vector<Entity*> entities = em.GetAllEntities();
-  std::cout << "Created Entities (" << entities.size() << ")\n";
-  for (Entity* e: entities) {
-    std::cout << "Entity: " << e->GetId() << ", signature: " << e->GetComponentBits() << "\n";
-  }
+  em.ForEach([em](Entity entity){
+    std::cout << "Entity: " << entity << " components: " << em.GetEntityComponentBitmask(entity) << "\n";
+  });
 
   std::cout << "Window closed.\n";
 

@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "entities/entity.h"
+#include "ecs/entity.h"
 #include "components.h"
 
 namespace NocEngine {
@@ -16,28 +16,26 @@ namespace NocEngine {
     class IComponentArray {
     public:
         virtual ~IComponentArray() = default;
-        virtual void OnEntityIdUpdated(const Entity& entity, const size_t oldEntityId) = 0;
+        virtual void OnEntityIdUpdated(const Entity& entity, const Entity& oldEntityId) = 0;
         virtual void OnEntityDestroyed(const Entity& entity) = 0;
     };
 
     template<ValidComponent T>
     class ComponentArray : public IComponentArray {
-        typedef size_t EntityId;
-        typedef size_t ComponentId;
+        using ComponentId = size_t;
         static constexpr ComponentId INVALID = std::numeric_limits<ComponentId>::max();
+        
         public:
             bool HasComponent(const Entity& entity) const {
-                const size_t entityId = entity.GetId();
-                return (entityId < m_entityToComponent.size() && m_entityToComponent[entityId] != INVALID);
+                return (entity < m_entityToComponent.size() && m_entityToComponent[entity] != INVALID);
             }
 
-            bool HasComponent(const size_t entityId) const {
-                return (entityId < m_entityToComponent.size() && m_entityToComponent[entityId] != INVALID);
+            bool HasComponent(const size_t entity) const {
+                return (entity < m_entityToComponent.size() && m_entityToComponent[entity] != INVALID);
             }
 
             T& GetComponent(const Entity& entity) {
-                const size_t entityId = entity.GetId();
-                const size_t componentId = m_entityToComponent[entityId];
+                const size_t componentId = m_entityToComponent[entity];
                 return m_components[componentId];
             }
 
@@ -46,28 +44,26 @@ namespace NocEngine {
             }
 
             T& InsertComponent(const Entity& entity, T&& component) {
-                const size_t entityId = entity.GetId();
-                if (m_entityToComponent.size() <= entityId){
-                    m_entityToComponent.resize(entityId+1, INVALID);
+                if (m_entityToComponent.size() <= entity){
+                    m_entityToComponent.resize(entity+1, INVALID);
                 }
-                if (HasComponent(entityId)){
+                if (HasComponent(entity)){
                     return GetComponent(entity);
                 }
 
                 const size_t componentId = m_components.size();
                 m_components.emplace_back(std::forward<T>(component));
-                m_entityToComponent[entityId] = componentId;
+                m_entityToComponent[entity] = componentId;
                 return m_components.at(componentId);
             }
 
             void RemoveComponent(const Entity& entity) {
-                const size_t entityId = entity.GetId();
-                if (entityId >= m_entityToComponent.size()){
+                if (entity >= m_entityToComponent.size()){
                     std::cerr << "ComponentArray::RemoveComponent: entity does not exist.\n";
                     return;
                 }
 
-                const size_t componentId = m_entityToComponent[entityId];
+                const size_t componentId = m_entityToComponent[entity];
                 const size_t lastComponentId = m_components.size() - 1;
 
                 auto it = std::find(m_entityToComponent.begin(), m_entityToComponent.end(), lastComponentId);
@@ -80,21 +76,19 @@ namespace NocEngine {
                     m_components[componentId] = std::move(m_components[lastComponentId]);
                     m_entityToComponent[lastComponentEntityId] = componentId;
                 }
-                m_entityToComponent[entityId] = INVALID; // Invalidate entity.
+                m_entityToComponent[entity] = INVALID; // Invalidate entity.
                 m_components.pop_back();
             }
 
-            void OnEntityIdUpdated(const Entity& entity, const size_t oldEntityId) override {
-                const size_t entityId = entity.GetId();
+            void OnEntityIdUpdated(const Entity& entity, const Entity& oldEntityId) override {
                 if (HasComponent(oldEntityId)){
-                    m_entityToComponent[entityId] = m_entityToComponent[oldEntityId];
+                    m_entityToComponent[entity] = m_entityToComponent[oldEntityId];
                     m_entityToComponent[oldEntityId] = INVALID;
                 }
             }
 
 
             void OnEntityDestroyed(const Entity& entity) override {
-                const size_t entityId = entity.GetId();
                 if (HasComponent(entity)){
                     RemoveComponent(entity);
                 }
