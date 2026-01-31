@@ -12,7 +12,7 @@ Window::Window()
   init();
 }
 
-Window::Window(Math::Vector2<uint32_t> size, const char *title)
+Window::Window(glm::vec2 size, const char *title)
     : m_size(size), m_title(title)
 {
   init();

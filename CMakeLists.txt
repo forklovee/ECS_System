@@ -16,7 +16,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 add_subdirectory(libs/glfw)
+add_subdirectory(libs/glm)
 add_library(glad libs/glad/src/glad.c)
+
 target_include_directories(glad PUBLIC
   libs/glad/include
 )
@@ -24,6 +26,7 @@ target_include_directories(glad PUBLIC
 target_include_directories(${PROJECT_NAME} PUBLIC
   libs/glad/include
   libs/glfw/include
+  libs/glm
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
@@ -33,4 +36,4 @@ target_sources(${PROJECT_NAME} PRIVATE
   src/rendering/shader.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} glad glfw)
+target_link_libraries(${PROJECT_NAME} glad glfw glm::glm)

@@ -2,7 +2,7 @@
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include <math.h>
+#include "glm/vec2.hpp"
 
 #include <string>
 
@@ -11,7 +11,7 @@ namespace NocEngine {
 class Window {
 public:
   Window();
-  Window(Math::Vector2<uint32_t> size, const char *title);
+  Window(glm::vec2 size, const char *title);
   ~Window();
 
   Window(const Window &other) = delete;
@@ -36,7 +36,7 @@ private:
 private:
   GLFWwindow *m_window;
   std::string m_title{};
-  Math::Vector2<uint32_t> m_size{};
+  glm::vec2 m_size{};
 };
 
 } // namespace NocEngine

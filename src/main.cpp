@@ -1,8 +1,6 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "math.h"
-
 #include "ecs/components/components.h"
 #include "ecs/component_manager.h"
 #include "ecs/entity_manager.h"

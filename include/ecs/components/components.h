@@ -2,9 +2,8 @@
 
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
+#include <glm/vec3.hpp>
 #include <cstdint>
-
-#include "math.h"
 
 namespace NocEngine {
 
@@ -12,9 +11,9 @@ struct CComponent {
 };
 
 struct CTransform: CComponent {
-  Math::Vector3<float> position{};
-  Math::Vector3<float> rotation{};
-  Math::Vector3<float> scale{};
+  glm::vec3 position{};
+  glm::vec3 rotation{};
+  glm::vec3 scale{};
 };
 
 struct CMeshRenderer: CComponent{
@@ -36,8 +35,8 @@ struct CMeshRenderer: CComponent{
 };
 
 struct CBoxShape: CComponent {
-  Math::Vector3<float> position{};
-  Math::Vector3<float> size{};
+  glm::vec3 position{};
+  glm::vec3 size{};
 };
 
 struct CSphereShape: CComponent {
