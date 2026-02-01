@@ -5,7 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        include/core/resource_handle.h
+        include/core/resource_container.h)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     include
@@ -27,10 +29,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   libs/glad/include
   libs/glfw/include
   libs/glm
+  libs/stb_image
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-  src/core/window.cpp
+        src/core/window.cpp
   src/ecs/entity_manager.cpp
   src/rendering/rendering_system.cpp
   src/rendering/shader.cpp

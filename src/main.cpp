@@ -8,6 +8,7 @@
 
 #include "mesh.h"
 #include "rendering_system.h"
+#include "resource_manager.h"
 #include "shader.h"
 
 using namespace NocEngine;
@@ -15,6 +16,9 @@ using namespace NocEngine;
 int main() {
   Window window{{1280, 720}, "ECS Debug"};
   RenderingSystem renderingSystem;
+
+  ResourceManager& resource_manager = ResourceManager::Get();
+  resource_manager.Load<Texture>("../assets/images/example.jpg");
 
   EntityManager& em = EntityManager::Get();
   ComponentManager& cm = ComponentManager::Get();
