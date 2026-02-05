@@ -11,8 +11,10 @@ Beautiful orange square :)
 ## Current Features
 ### Core Systems:
 Custom Entity Component System (ECS) architecture
-- Implemented Entities and Components with managers for each
+- Entities and Entity Manager/Factory
+- Components and Component Manager/Factory
 - Rendering System
+- Resource Manager (sync loading, for now)
 
 GLFW window management
 - No input handling yet
