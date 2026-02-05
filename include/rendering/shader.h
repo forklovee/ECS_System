@@ -21,6 +21,7 @@ public:
     Shader& operator=(Shader&& other) noexcept = delete;
 
     void Use() const;
+	void SetUniformInt(const std::string& name, int value) const;
 
 private:
     const std::string getShaderSource(const char* shader_file_path) const;

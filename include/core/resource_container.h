@@ -20,16 +20,16 @@ namespace NocEngine {
 
         }
 
-        T* Get(const ResourceHandle<T>& handle) const {
+        T* Get(const ResourceHandle<T>& handle) {
             uint32_t slotId{ handle.id };
             uint32_t generation{ handle.generation };
-            if (slotId >= m_resources.size() || m_resources[slotId].generation != generation) {
+            if (slotId >= m_resources.size() || m_resources[slotId].GetGeneration() != generation) {
                 return nullptr;
             }
-            return m_resources[slotId];
+            return &m_resources[slotId];
         }
 
-        ResourceHandle<T> Load(const std::string& file_path) {
+        ResourceHandle<T> Load(const std::string& file_path, bool autoload_asset) {
             const char* internedPath = m_resourcePathPool.intern(file_path);
             auto it = m_pathToId.find(internedPath);
             if (it != m_pathToId.end()) {
@@ -44,10 +44,13 @@ namespace NocEngine {
             }
             else {
                 slotId = m_resources.size();
-                m_resources.push_back(T());
+                T newResource{ internedPath };
+				m_resources.emplace_back(std::move(newResource));
             }
 
-            m_resources[slotId].Load(internedPath);
+            if (autoload_asset) {
+                m_resources[slotId].Load();
+            }
             m_pathToId[internedPath] = slotId;
 
             return ResourceHandle<T>{slotId, m_resources[slotId].GetGeneration()};

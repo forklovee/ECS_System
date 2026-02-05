@@ -70,6 +70,12 @@ void Shader::Use() const
     glUseProgram(id);
 }
 
+void Shader::SetUniformInt(const std::string& name, int value) const
+{
+	glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+}
+
+
 const std::string Shader::getShaderSource(const char* shader_file_path) const
 {
     std::ifstream file(shader_file_path);

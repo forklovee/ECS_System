@@ -9,7 +9,6 @@
 #include "mesh.h"
 #include "rendering_system.h"
 #include "resource_manager.h"
-#include "shader.h"
 
 using namespace NocEngine;
 
@@ -18,12 +17,11 @@ int main() {
   RenderingSystem renderingSystem;
 
   ResourceManager& resource_manager = ResourceManager::Get();
-  resource_manager.Load<Texture>("../assets/images/example.jpg");
 
   EntityManager& em = EntityManager::Get();
   ComponentManager& cm = ComponentManager::Get();
   
-  // Entities and components test creation
+  // Entities and components creation test
   for (size_t i{}; i < 1; i++) {
     Entity e = em.CreateEntity();
     cm.CreateComponent<CTransform>(e);
@@ -36,14 +34,12 @@ int main() {
     }
   }
 
-  Shader base_shader{"../assets/shaders/base_vertex.glsl", "../assets/shaders/base_fragment.glsl"};
-  MeshData mesh;
-
   Entity e = em.CreateEntity();
   cm.CreateComponent<CTransform>(e);
+
   CMeshRenderer& mr = cm.CreateComponent<CMeshRenderer>(e);
-  mr.mesh_ptr = &mesh;
-  mr.shader_ptr = &base_shader;
+  mr.meshdata_handle = resource_manager.Load<NocEngine::MeshData>("");
+  mr.texture_handle = resource_manager.Load<Texture>("../assets/images/example.jpg");
 
   while (!window.ShouldClose()) {
     window.PollEvents();

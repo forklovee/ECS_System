@@ -33,8 +33,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_sources(${PROJECT_NAME} PRIVATE
-        src/core/window.cpp
+  src/core/window.cpp
   src/ecs/entity_manager.cpp
+  src/stb_image.cpp
   src/rendering/rendering_system.cpp
   src/rendering/shader.cpp
 )

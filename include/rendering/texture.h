@@ -1,16 +1,20 @@
 #pragma once
 
 #include "resource.h"
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "glm/vec2.hpp"
 
 namespace NocEngine
 {
+	// Class representing loaded texture data from external image file
 	class Texture: public IResource
 	{
 	public:
-		Texture() = default;
-		virtual ~Texture() override {
+		Texture(const char* file_path)
+			: IResource(file_path)
+		{};
+
+		~Texture() override {
 			Unload();
 		};
 
@@ -18,7 +22,7 @@ namespace NocEngine
 			: IResource(std::move(other)),
 				m_size(other.m_size), m_channels(other.m_channels), m_image_ptr(other.m_image_ptr)
 		{
-
+			other.m_image_ptr = nullptr;
 		};
 
 		Texture& operator=(Texture&& other) noexcept {
@@ -37,12 +41,20 @@ namespace NocEngine
 			return m_image_ptr != nullptr;
 		}
 
-		void Load(const char* file_path) override {
-			m_image_ptr = stbi_load(file_path, &m_size.x, &m_size.y, &m_channels, 0);
+		void Load() override {
+			if (IsLoaded()) {
+				return;
+			}
+			stbi_set_flip_vertically_on_load(true);
+			m_image_ptr = stbi_load(m_file_path, &m_size.x, &m_size.y, &m_channels, 0);
 			if (!m_image_ptr) {
 				return;
 			}
-			std::cout << "Texture: " << file_path << " loaded!\n";
+		}
+
+		void Reload() {
+			Unload();
+			Load();
 		}
 
 		void Unload() override {
@@ -51,14 +63,22 @@ namespace NocEngine
 			}
 			stbi_image_free(m_image_ptr);
 			m_image_ptr = nullptr;
-			std::cout << "Texture: unloaded!\n";
+		}
+
+		glm::ivec2 GetSize() const {
+			return m_size;
+		}
+
+		int32_t GetChannels() const {
+			return m_channels;
+		}
+
+		unsigned char* GetDataPtr() const {
+			return m_image_ptr;
 		}
 
 	private:
-		void loadTexture(const char* image_path);
-
-	private:
-		glm::i32vec2 m_size{};
+		glm::ivec2 m_size{};
 		int32_t m_channels{};
 		stbi_uc* m_image_ptr{};
 	};

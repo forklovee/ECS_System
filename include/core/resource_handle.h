@@ -11,7 +11,9 @@ namespace NocEngine {
     template<ResourceType T>
         struct ResourceHandle
     {
-        ResourceHandle() = delete;
+        ResourceHandle()
+			: id(0), generation(0)
+        { };
         ResourceHandle(uint32_t id)
             : id(id), generation(0)
         { }
