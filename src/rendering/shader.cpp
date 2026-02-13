@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 
 namespace NocEngine
@@ -72,9 +73,21 @@ void Shader::Use() const
 
 void Shader::SetUniformInt(const std::string& name, int value) const
 {
-	glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+    uint32_t location = glGetUniformLocation(id, name.c_str());
+	glUniform1i(location, value);
 }
 
+void Shader::SetUniformFloat(const std::string& name, float value) const
+{
+    uint32_t location = glGetUniformLocation(id, name.c_str());
+    glUniform1f(location, value);
+}
+
+void Shader::SetUniformMat4(const std::string& name, const glm::mat4& mat4_ref) const
+{
+    uint32_t location = glGetUniformLocation(id, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4_ref));
+}
 
 const std::string Shader::getShaderSource(const char* shader_file_path) const
 {

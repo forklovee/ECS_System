@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <glm/ext/matrix_float4x4.hpp>
 
 namespace NocEngine
 {
@@ -22,6 +23,8 @@ public:
 
     void Use() const;
 	void SetUniformInt(const std::string& name, int value) const;
+	void SetUniformFloat(const std::string& name, float value) const;
+	void SetUniformMat4(const std::string& name, const glm::mat4& mat4_value_ptr) const;
 
 private:
     const std::string getShaderSource(const char* shader_file_path) const;

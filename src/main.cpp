@@ -22,9 +22,13 @@ int main() {
   ComponentManager& cm = ComponentManager::Get();
   
   // Entities and components creation test
-  for (size_t i{}; i < 1; i++) {
+  for (size_t i{}; i < 500; i++) {
     Entity e = em.CreateEntity();
-    cm.CreateComponent<CTransform>(e);
+    CTransform& tc = cm.CreateComponent<CTransform>(e);
+
+    CMeshRenderer& mr = cm.CreateComponent<CMeshRenderer>(e);
+    mr.meshdata_handle = resource_manager.Load<NocEngine::MeshData>("");
+    mr.texture_handle = resource_manager.Load<Texture>("../assets/images/example.jpg");
 
     if (i % 3 == 0){
       cm.CreateComponent<CBoxShape>(e);
@@ -34,16 +38,27 @@ int main() {
     }
   }
 
-  Entity e = em.CreateEntity();
-  cm.CreateComponent<CTransform>(e);
+  auto entity_transform_lambda = [&](Entity e) {
+      const uint8_t cols{ 24 };
+      const uint8_t row{ e % cols };
 
-  CMeshRenderer& mr = cm.CreateComponent<CMeshRenderer>(e);
-  mr.meshdata_handle = resource_manager.Load<NocEngine::MeshData>("");
-  mr.texture_handle = resource_manager.Load<Texture>("../assets/images/example.jpg");
+      CTransform& tc = cm.GetComponent<CTransform>(e);
+
+      tc.position.x = -static_cast<float>(cols)*.5f + (row * 1.5f);
+      tc.position.y = 8.0 - ((e / cols) * 1.5f);
+      tc.rotation += glm::vec3{ 0.01f, 0.01f, 0.01f };
+  };
+
+  std::bitset<64> renderableMeshesBitmask{ renderingSystem.GetRenderableEnityBitmask() };
 
   while (!window.ShouldClose()) {
     window.PollEvents();
     window.ClearScreen();
+
+    em.ForEachWithBitmask(
+        entity_transform_lambda,
+        renderableMeshesBitmask
+    );
 
     renderingSystem.Update();
 

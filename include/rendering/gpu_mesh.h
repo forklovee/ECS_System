@@ -50,14 +50,20 @@ namespace NocEngine
 		}
 
 		bool IsValid() const {
-			return VAO != 0 && VBO != 0 && EBO != 0;
+			return VAO != 0 && VBO != 0;
+		}
+
+		bool IsUsingIndices() const {
+			return EBO != 0;
 		}
 
 		void Draw() const {
 			if (!IsValid()) return;
 			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
+			if (IsUsingIndices())
+				glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0);
+			else
+				glDrawArrays(GL_TRIANGLES, 0, index_count);
 		}
 	};
 }
