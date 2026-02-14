@@ -44,7 +44,7 @@ private:
     
     glm::mat4 getMatrixFromCTransform(const CTransform& transform_component) const;
 private:
-	Shader m_baseShader{ "../assets/shaders/base_vertex.glsl", "../assets/shaders/base_fragment.glsl" };
+	Shader m_baseShader;
 
 	std::unordered_map<uint32_t, std::unique_ptr<GPU_Mesh>> m_gpuMeshes{};
 	std::unordered_map<uint32_t, std::unique_ptr<GPU_Texture>> m_gpuTextures{};

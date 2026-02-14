@@ -28,7 +28,7 @@ int main() {
 
     CMeshRenderer& mr = cm.CreateComponent<CMeshRenderer>(e);
     mr.meshdata_handle = resource_manager.Load<NocEngine::MeshData>("");
-    mr.texture_handle = resource_manager.Load<Texture>("../assets/images/example.jpg");
+    mr.texture_handle = resource_manager.Load<Texture>("assets/images/example.jpg");
 
     if (i % 3 == 0){
       cm.CreateComponent<CBoxShape>(e);

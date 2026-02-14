@@ -41,3 +41,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} glad glfw glm::glm)
+
+# Copy assets to binary directory :)
+file(COPY assets DESTINATION .)

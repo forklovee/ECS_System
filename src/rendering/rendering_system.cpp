@@ -21,7 +21,8 @@
 namespace NocEngine
 {
     RenderingSystem::RenderingSystem()
-        : m_activeCamera(EntityManager::Get().CreateEntity())
+        : m_baseShader("assets/shaders/base_vertex.glsl", "assets/shaders/base_fragment.glsl"),
+            m_activeCamera(EntityManager::Get().CreateEntity())
     {
 		CTransform& transformComponent = ComponentManager::Get().CreateComponent<CTransform>(m_activeCamera);
 		transformComponent.position = glm::vec3(-5.f, 5.f, -30.f);
